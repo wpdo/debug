@@ -18,6 +18,7 @@ class WPDO_Debug
 	private static $_ignore_part_filters ;
 
 	const V = '1.0' ;
+	const NAME = 'debug' ;
 
 	/**
 	 * @since  1.0
@@ -43,6 +44,21 @@ class WPDO_Debug
 				}
 
 			}
+		}
+
+		add_action( 'after_setup_theme', array( $this, 'init' ) ) ;
+	}
+
+	/**
+	 * after theme funcs
+	 *
+	 * @since  1.0
+	 * @access public
+	 */
+	public function init()
+	{
+		if( is_admin() ) {
+			WPDO_Debug_Admin::get_instance() ;
 		}
 	}
 
@@ -210,6 +226,12 @@ class WPDO_Debug
 		file_put_contents( WPDO_LOG_FILE, self::format_message( $msg ), FILE_APPEND ) ;
 	}
 
+	/**
+	 * Format msg
+	 *
+	 * @since  1.0
+	 * @access private
+	 */
 	private static function format_message( $msg )
 	{
 		// If call here without calling get_enabled() first, improve compatibility

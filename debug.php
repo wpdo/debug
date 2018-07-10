@@ -41,6 +41,7 @@ if ( function_exists( 'debug' ) || defined( 'debug' ) || class_exists( 'WPDO_Deb
 
 ! defined( 'WPDO_DEBUG_PLUGIN_URL' ) && define( 'WPDO_DEBUG_PLUGIN_URL', plugin_dir_url( __FILE__ ) ) ;// Full URL path '//example.com/wp-content/plugins/debug/'
 ! defined( 'WPDO_DEBUG_DIR' ) && define( 'WPDO_DEBUG_DIR', dirname( __FILE__ ) . '/' ) ;// Full absolute path '/usr/***/wp-content/plugins/debug/'
+! defined( 'WPDO_DEBUG_BASENAME' ) && define( 'WPDO_DEBUG_BASENAME', 'debug/debug.php' ) ;//WPDO_DEBUG_BASENAME='debug/debug.php'
 
 ! defined( 'WPDO_TIME_OFFSET' ) && define( 'WPDO_TIME_OFFSET', get_option( 'gmt_offset' ) * 60 * 60 ) ;
 
