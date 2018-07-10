@@ -3,19 +3,18 @@
  * The plugin bootstrap file
  *
  * @since             1.0
- * @package           debug
  *
  * @wordpress-plugin
  * Plugin Name:       Debug
  * Plugin URI:        https://wordpress.org/plugins/debug
  * Description:       WordPress debug plugin for developers.
  * Version:           1.0
- * Author:            WPdev
+ * Author:            WPDO
  * License:           GPLv3
  * License URI:       http://www.gnu.org/licenses/gpl.html
  * Text Domain:       debug
  *
- * Copyright (C) 2018 WPdev
+ * Copyright (C) 2018 WPDO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,31 +35,35 @@ if ( ! defined( 'WPINC' ) ) {
 	die ;
 }
 
-if ( function_exists( 'debug' ) || defined( 'debug' ) ) {
+if ( function_exists( 'debug' ) || defined( 'debug' ) || class_exists( 'WPDO_Debug' ) ) {
 	return ;
 }
 
-! defined( 'DEBUG_PLUGIN_URL' ) && define( 'DEBUG_PLUGIN_URL', plugin_dir_url( __FILE__ ) ) ;// Full URL path '//example.com/wp-content/plugins/debug/'
-! defined( 'DEBUG_DIR' ) && define( 'DEBUG_DIR', dirname( __FILE__ ) . '/' ) ;// Full absolute path '/usr/***/wp-content/plugins/debug/'
+! defined( 'WPDO_DEBUG_PLUGIN_URL' ) && define( 'WPDO_DEBUG_PLUGIN_URL', plugin_dir_url( __FILE__ ) ) ;// Full URL path '//example.com/wp-content/plugins/debug/'
+! defined( 'WPDO_DEBUG_DIR' ) && define( 'WPDO_DEBUG_DIR', dirname( __FILE__ ) . '/' ) ;// Full absolute path '/usr/***/wp-content/plugins/debug/'
 
-require_once DEBUG_DIR . 'autoload.inc.php' ;
+! defined( 'WPDO_TIME_OFFSET' ) && define( 'WPDO_TIME_OFFSET', get_option( 'gmt_offset' ) * 60 * 60 ) ;
 
-if ( ! function_exists( 'debug' ) ) {
+require_once WPDO_DEBUG_DIR . 'autoload.inc.php' ;
+
+if ( ! function_exists( 'debug' ) && ! defined( 'WPDO_DEBUG_FUNC' ) ) {
+	// This is to make sure debug() func is from our plugin
+	define( 'WPDO_DEBUG_FUNC', true ) ;
 	function debug( $msg, $backtrace_limit = false )
 	{
-		Debug::debug( $msg, $backtrace_limit ) ;
+		WPDO_Debug::debug( $msg, $backtrace_limit ) ;
 	}
 }
 
 if ( ! function_exists( 'debug2' ) ) {
 	function debug2( $msg, $backtrace_limit = false )
 	{
-		Debug::debug2( $msg, $backtrace_limit ) ;
+		WPDO_Debug::debug2( $msg, $backtrace_limit ) ;
 	}
 }
 
-if ( ! function_exists( 'launch_debug' ) ) {
-	function launch_debug()
+if ( ! function_exists( 'launch_wpdo_debug' ) ) {
+	function launch_wpdo_debug()
 	{
 		$version_supported = true ;
 
@@ -75,10 +78,10 @@ if ( ! function_exists( 'launch_debug' ) ) {
 		}
 
 		if ( $version_supported ) {
-			Debug::get_instance() ;
+			WPDO_Debug::get_instance() ;
 		}
 	}
 
-	launch_debug() ;
+	launch_wpdo_debug() ;
 }
 

@@ -10,16 +10,19 @@ if ( ! defined( 'WPINC' ) ) {
 }
 
 
-class Debug_Config
+class WPDO_Debug_Config
 {
 	private static $_instance ;
 
-	const ITEM_CONF = 'debug-conf' ;
+	protected $options ;
+
+	const ITEM_CONF = 'debug-config' ;
 	const ITEM_IP = 'debug-ip' ;
-	const ITEM_EXC_FILTERS = 'debug-exc_filters' ;
-	const ITEM_EXC_PART_FILTERS = 'debug-exc_part_filters' ;
+	const ITEM_EXC_FILTERS = 'debug-exc-filters' ;
+	const ITEM_EXC_PART_FILTERS = 'debug-exc-part-filters' ;
 
 	const OPT_DEBUG 		= 'debug' ;
+	const OPT_IP_ONLY 		= 'ip_only' ;
 	const OPT_LEVEL 		= 'level' ;
 	const OPT_LOG_COOKIE 	= 'log_cookie' ;
 	const OPT_LOG_AGENT 	= 'log_agent' ;
@@ -36,14 +39,100 @@ class Debug_Config
 	private function __construct()
 	{
 
-		$options = get_option( self::ITEM_CONF, $this->defaults() ) ;
+		$this->options = get_option( self::ITEM_CONF, $this->default_options() ) ;
 	}
 
-	public function defaults()
+	/**
+	 * Get option val
+	 *
+	 * @since 1.0
+	 * @access public
+	 */
+	public static function option( $id )
 	{
-		$defaults = array(
-			self::OPT_DEBUG 	=> true,
+		$id = constant( 'self::OPT_' . $id ) ;
+
+		if ( isset( self::get_instance()->options[ $id ] ) ) {
+			return self::get_instance()->options[ $id ] ;
+		}
+
+		defined( 'debug' ) && debug( '[Cfg] Invalid option ID ' . $id ) ;
+
+		return NULL ;
+	}
+
+	/**
+	 * Get item val
+	 *
+	 * @since  1.0
+	 * @access public
+	 */
+	public static function item( $k, $return_string = false )
+	{
+		$k = constant( 'self::ITEM_' . $k ) ;
+
+		$val = get_option( $k, self::get_instance()->default_item( $k ) ) ;
+
+		if ( ! $return_string && ! is_array( $val ) ) {
+			$val = $val ? explode( "\n", $val ) : array() ;
+		}
+		elseif ( $return_string && is_array( $val ) ) {
+			$val = implode( "\n", $val ) ;
+		}
+
+		return $val ;
+	}
+	/**
+	 * Get default options val
+	 *
+	 * @since 1.0
+	 * @access public
+	 */
+	public function default_options()
+	{
+		$default_options = array(
+			self::OPT_DEBUG 		=> true,
+			self::OPT_IP_ONLY 		=> true,
+			self::OPT_LEVEL 		=> false,
+			self::OPT_LOG_COOKIE	=> false,
+			self::OPT_LOG_AGENT		=> false,
+			self::OPT_COLLAPSE_QS	=> false,
+			self::OPT_LOG_FILTER	=> false,
+			self::OPT_LOG_FILESIZE	=> '2',
 		) ;
+
+		return $default_options ;
+	}
+
+	/**
+	 * Get default item val
+	 *
+	 * @since 1.0
+	 * @access public
+	 */
+	public function default_item( $k )
+	{
+		switch ( $k ) {
+			case self::ITEM_IP :
+				return	"127.0.0.1" ;
+
+			case self::ITEM_EXC_FILTERS :
+				return	"gettext\n" .
+						"gettext_with_context\n" .
+						"get_the_terms\n" .
+						"get_term" ;
+
+			case self::ITEM_EXC_PART_FILTERS :
+				return	"i18n\n" .
+						"locale\n" .
+						"settings\n" .
+						"option" ;
+
+			default :
+				break ;
+		}
+
+		return false ;
 	}
 
 	/**

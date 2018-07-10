@@ -1,5 +1,5 @@
 === Debug ===
-Contributors: wpdev
+Contributors: WPDO
 Tags: debug
 Requires at least: 4.0
 Tested up to: 4.9.7
@@ -27,14 +27,10 @@ defined( 'debug' ) && debug2( $var ) ;
 defined( 'debug' ) && debug( $var, 4 ) ;
 ```
 
-== Screenshots ==
-
-1. Plugin Setting
-
 == LSCWP Resources ==
 * [Ask a question on WordPress forum](https://wordpress.org/support/plugin/debug/).
 * [Help translate](https://translate.wordpress.org/projects/wp-plugins/debug).
-* [GitHub repo](https://github.com/wpdev01/debug).
+* [GitHub repo](https://github.com/wpdo/debug).
 
 == Installation ==
 
